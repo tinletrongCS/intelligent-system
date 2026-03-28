@@ -1,5 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*.pyc 
+*.pyo
 *.py[codz]
 *$py.class
 
@@ -205,3 +207,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# Virtual environment
+venv/
+.venv/
+env/
+app/venv/
+app/.env
+app/.idea
+app/__pycache__
