@@ -1,0 +1,34 @@
+Tổng số cột One-hot phân tích: 17
+
+[TOP 10 NHÃN PHỔ BIẾN NHẤT (Fill Rate cao)]
+    Column  Fill Rate (%)  Sparsity (%)
+use_Casual      78.441795     21.558205
+   gen_Men      49.605259     50.394741
+sea_Summer      47.614255     52.385745
+ gen_Women      41.716730     58.283270
+  sea_Fall      26.930456     73.069544
+sea_Winter      16.777278     83.222722
+use_Sports      11.291794     88.708206
+sea_Spring       8.678011     91.321989
+use_Ethnic       6.205769     93.794231
+gen_Unisex       5.573554     94.426446
+
+[TOP 10 NHÃN THƯA THỚT NHẤT (Fill Rate thấp)]
+          Column  Fill Rate (%)  Sparsity (%)
+      sea_Spring       8.678011     91.321989
+      use_Ethnic       6.205769     93.794231
+      gen_Unisex       5.573554     94.426446
+      use_Formal       3.777561     96.222439
+        gen_Boys       1.717359     98.282641
+       gen_Girls       1.387098     98.612902
+use_Smart Casual       0.147831     99.852169
+      use_Travel       0.081779     99.918221
+       use_Party       0.050326     99.949674
+        use_Home       0.003145     99.996855
+
+------------------------------------------------------------
+SỐ LƯỢNG NHÃN RẤT THƯA (< 1%): 4
+Danh sách: use_Smart Casual, use_Travel, use_Party, use_Home
+
+NHẬN XÉT CHIÊN THUẬT:
+- Một số nhãn có tỉ lệ xuất hiện cực thấp. Nếu mô hình Underfit, hãy cân nhắc gộp các nhãn này vào nhóm 'Others'.

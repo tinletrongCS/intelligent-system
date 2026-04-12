@@ -1,0 +1,15 @@
+Tổng số bản ghi xử lý: 31,793
+
+[THỐNG KÊ DESCRIPTION]
+- Số lượng 'not found': 510 (1.60%)
+- Độ dài trung bình:  62.47 từ
+- Độ dài lớn nhất:     646 từ
+
+[THỐNG KÊ STYLE NOTE]
+- Số lượng 'not found': 20,637 (64.91%)
+- Độ dài trung bình:  19.28 từ
+- Độ dài lớn nhất:     119 từ
+
+------------------------------------------------------------
+NHẬN XÉT CHIẾN THUẬT:
+- Cảnh báo: Một số Description khá dài, cân nhắc truncation khi dùng BERT.
