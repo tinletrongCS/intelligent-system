@@ -1,0 +1,2 @@
+Nghi ngờ trùng lặp mềm: 17616
+Trùng lặp ID tuyệt đối: 0

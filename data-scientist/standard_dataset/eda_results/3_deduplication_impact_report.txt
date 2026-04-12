@@ -1,0 +1,19 @@
+Số lượng dòng ban đầu (Raw):          44,446 dòng
+Số lượng dòng sau khi lọc (Clean):     31,793 dòng
+Tổng số dòng bị loại bỏ:              12,653 dòng
+Tỷ lệ dữ liệu bị cắt giảm:            28.47%
+------------------------------------------------------------
+Chi tiết thay đổi theo Master Category:
+
+                Before (Raw)  After (Clean)
+masterCategory                             
+Apparel                21400          15732
+Accessories            11289           6977
+Footwear                9222           6667
+Personal Care           2404           2328
+Free Items               105             63
+Sporting Goods            25             25
+Home                       1              1
+
+------------------------------------------------------------
+Ghi chú: Dòng bị loại bỏ bao gồm sản phẩm trùng lặp và sản phẩm thiếu ảnh.
