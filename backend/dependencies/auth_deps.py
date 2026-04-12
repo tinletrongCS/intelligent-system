@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from database import get_db
-from models.domain_models import User
+from models.domain_models import User, Role
 from core.security import verify_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -24,6 +24,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 
 async def require_admin(current_user: User = Depends(get_current_user)) -> User:
-    if current_user.role_id != 1:
+    if current_user.role_id != Role.ADMIN.value:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Không đủ quyền truy cập. Yêu cầu quyền Admin.")
     return current_user
