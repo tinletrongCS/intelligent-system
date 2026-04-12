@@ -28,7 +28,7 @@ class ICTBaseModel(BaseModel):
 class UserBase(BaseModel):
     username: str
     email: str
-    role_id: int
+    role_id: Optional[int] = None
     gender: Optional[str] = None
     age: Optional[int] = None
 
@@ -39,6 +39,13 @@ class UserResponse(ICTBaseModel, UserBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
+class RoleUpdate(BaseModel):
+    role_id: int
+    
+class UserRoleResponse(BaseModel):
+    username: str
+    new_role: int
 
 class TokenResponse(BaseModel):
     access_token: str
@@ -57,8 +64,8 @@ class ResetPasswordSchema(BaseModel):
 
 # PRODUCT
 class ProductBase(BaseModel):
-    price: int
-    discounted_price: Optional[int] = None
+    price: float
+    discounted_price: Optional[float] = None
     product_display_name: str
     brand_name: str
     gender: Optional[str] = None
@@ -88,8 +95,8 @@ class OrderItemResponse(ICTBaseModel):
     id: int
     product_id: UUID
     quantity: int
-    unit_price: int
-    subtotal: int
+    unit_price: float
+    subtotal: float
     product: Optional[ProductResponse] = None
 
 class OrderResponse(ICTBaseModel):
@@ -97,7 +104,7 @@ class OrderResponse(ICTBaseModel):
     user_id: UUID
     order_date: datetime
     status: int
-    total_amount: int
+    total_amount: float
     note: Optional[str] = None
     items: List[OrderItemResponse] = []
     updated_at: datetime
@@ -113,8 +120,6 @@ class CartItemResponse(ICTBaseModel):
     user_id: UUID
     product_id: UUID
     quantity: int
-    unit_price: int
-    total_price: int
     created_at: datetime
     updated_at: datetime
     product: Optional[ProductResponse] = None

@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-
+from models.domain_models import User
 from database import get_db
-from schemas.domain_schemas import TokenResponse, UserResponse, UserCreate
+from dependencies.auth_deps import require_admin, get_current_user
+from schemas.domain_schemas import TokenResponse, UserResponse, UserCreate, RoleUpdate, UserRoleResponse
+from uuid import UUID
+
 import services.auth_service as auth_service
 router = APIRouter()
 
@@ -13,7 +16,6 @@ router = APIRouter()
 async def register_user(user_in: UserCreate, db: Session = Depends(get_db)):
     return await auth_service.register_user(user_in, db)
 
-
 # Đăng nhập
 @router.post("/login", response_model=TokenResponse)
 async def login(
@@ -21,3 +23,14 @@ async def login(
     db: Session = Depends(get_db)
 ):
     return await auth_service.login(form_data, db)
+
+# Chỉnh sửa vai trò người dùng - chỉ ADMIN 
+@router.patch("/{username}/role", response_model=UserRoleResponse)
+async def update_user_role(
+    username: str, 
+    role_in: RoleUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    return await auth_service.update_user_role(username, role_in, db)
+

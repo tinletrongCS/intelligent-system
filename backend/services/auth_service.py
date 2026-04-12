@@ -2,7 +2,8 @@ from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from schemas.domain_schemas import TokenResponse, UserResponse, UserCreate
+from schemas.domain_schemas import TokenResponse, UserResponse, UserCreate, RoleUpdate, UserRoleResponse
+from uuid import UUID
 from core.security import verify_password, create_access_token
 import repositories.user_repository as user_repo
 
@@ -30,3 +31,15 @@ async def login(form_data: OAuth2PasswordRequestForm, db: Session) -> TokenRespo
     # Ký token với nội dung (sub) là user_id
     access_token = create_access_token(data={"sub": str(user.id)})
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+async def update_user_role(username: str, role_in: RoleUpdate, db: Session) -> UserRoleResponse:
+    """Service xử lý logic cập nhật vai trò người dùng"""
+    updated_user = user_repo.update_user_role(db, username, role_in.role_id)
+    if not updated_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Không tìm thấy người dùng")
+    
+    return UserRoleResponse(
+        username=updated_user.username,
+        new_role=updated_user.role_id
+    )
