@@ -1,8 +1,7 @@
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-
-from schemas.domain_schemas import TokenResponse, UserResponse, UserCreate, RoleUpdate, UserRoleResponse
+from schemas.auth_schema import TokenResponse, UserResponse, UserCreate, RoleUpdate, UserRoleResponse
 from uuid import UUID
 from core.security import verify_password, create_access_token
 import repositories.user_repository as user_repo
@@ -28,7 +27,6 @@ async def login(form_data: OAuth2PasswordRequestForm, db: Session) -> TokenRespo
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # Ký token với nội dung (sub) là user_id
     access_token = create_access_token(data={"sub": str(user.id)})
     return {"access_token": access_token, "token_type": "bearer"}
 

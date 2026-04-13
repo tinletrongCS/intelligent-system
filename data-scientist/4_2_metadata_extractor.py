@@ -8,6 +8,7 @@ output_path = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data
 
 def extract_metadata_features():
     print("--- Bắt đầu trích xuất Metadata Features ---")
+    global output_path
     
     # 1. Nạp dữ liệu
     df_clean = pd.read_csv(preprocessed_csv)
