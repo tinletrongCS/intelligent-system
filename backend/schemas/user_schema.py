@@ -2,7 +2,7 @@ from typing import Optional
 from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel
-from base_schema import ICTBaseModel
+from .base_schema import ICTBaseModel
 
 class UserBase(BaseModel):
     username: str

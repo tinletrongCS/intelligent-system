@@ -1,7 +1,8 @@
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from schemas.auth_schema import TokenResponse, UserResponse, UserCreate, RoleUpdate, UserRoleResponse
+from schemas.auth_schema import TokenResponse
+from schemas.user_schema import UserResponse, UserCreate, RoleUpdate, UserRoleResponse
 from uuid import UUID
 from core.security import verify_password, create_access_token
 import repositories.user_repository as user_repo

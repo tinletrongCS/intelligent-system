@@ -2,8 +2,8 @@ from typing import Optional
 from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel
-from base_schema import ICTBaseModel
-from product_schema import ProductResponse
+from .base_schema import ICTBaseModel
+from .product_schema import ProductResponse
 
 class CartItemAdd(BaseModel):
     product_id: UUID

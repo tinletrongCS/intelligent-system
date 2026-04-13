@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from core.config import settings
 from database import get_db
-from models.domain_models import User
+from models.user_model import User
 
 # Hàm băm và xác thực mật khẩu 
 
