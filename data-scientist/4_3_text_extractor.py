@@ -13,6 +13,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Đang sử dụng thiết bị: {device}")
 
 def extract_text_features():
+    global output_path
     print("--- Bắt đầu trích xuất Text Embeddings ---")
     
     # 1. Nạp dữ liệu và Đồng bộ hóa ID

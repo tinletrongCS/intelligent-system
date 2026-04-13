@@ -10,8 +10,8 @@ from torch_geometric.utils import train_test_split_edges
 from tqdm import tqdm
 
 path_node_features = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\final_node_features\final_node_features.npy"
-path_edge_index = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\edge_matrix_features\edge_index.npy"
-path_mapping = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\edge_matrix_features\id_to_idx_mapping.csv"
+path_edge_index = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\graph_data\edge_index.npy"
+path_mapping = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\graph_data\id_to_idx_mapping.csv"
 
 model_output_path = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\models"
 embedding_output_path = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\models\final_gnn_embeddings"
