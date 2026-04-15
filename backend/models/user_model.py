@@ -28,6 +28,7 @@ class User(Base):
     orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")
     wishlist_items = relationship("Wishlist", back_populates="user", cascade="all, delete-orphan")
     cart_items = relationship("Cart", back_populates="user", cascade="all, delete-orphan")
+    interactions = relationship("Interaction", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User(username={self.username!r}, id={self.id})>"
