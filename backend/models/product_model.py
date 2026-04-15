@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, Float, TIMESTAMP, func, Boolean, Text
+from sqlalchemy import Column, String, Float, TIMESTAMP, func, Boolean, Text, Integer
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from database import Base
@@ -32,6 +32,8 @@ class Product(Base):
     fabric = Column(String(255), nullable=True)
     fit = Column(String(100), nullable=True)
     neck = Column(String(100), nullable=True)
+
+    quantity_in_stock = Column(Integer, nullable=False, server_default='0', default=0)
     
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())

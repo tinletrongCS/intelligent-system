@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
-from schemas.whistlist_schema import WishlistAdd, WishlistResponse
+from schemas.wishlist_schema import WishlistAdd, WishlistResponse
 from schemas.base_schema import IMessageResponse
 from dependencies.auth_deps import get_current_user
 from models.user_model import User
@@ -9,8 +9,7 @@ from services import wishlist_service
 from typing import List
 from uuid import UUID
 
-router = APIRouter(prefix="/wishlists", tags=["Wishlists"])
-
+router = APIRouter()
 @router.post("", response_model=WishlistResponse, status_code=status.HTTP_201_CREATED)
 async def add_to_wishlist(
     wishlist_in: WishlistAdd,
