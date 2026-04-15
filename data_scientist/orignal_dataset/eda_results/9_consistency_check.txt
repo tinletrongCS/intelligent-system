@@ -1,4 +1,0 @@
-Số sản phẩm trong CSV: 44446
-Số file ảnh: 44441
-Thiếu ảnh: 5
-Ảnh dư (Orphan): 0

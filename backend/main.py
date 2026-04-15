@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import engine, Base
 # Import router
+from routers import auth
+from routers import product
+from routers import model_ai
 from routers import auth, product, wishlist, cart
 
 Base.metadata.create_all(bind=engine)
@@ -23,6 +26,8 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+app.include_router(product.router)
+app.include_router(model_ai.router)
 app.include_router(product.router, prefix="/products", tags=["Products"])
 app.include_router(wishlist.router, prefix="/wishlist", tags=["Wishlist"])
 app.include_router(cart.router, prefix="/cart", tags=["Cart"])

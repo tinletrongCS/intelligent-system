@@ -1,0 +1,4 @@
+Thống kê Cardinality:
+- brand_label: 28 unique
+- productName_label: 868 unique
+- articleType_label: 35 unique

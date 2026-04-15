@@ -1,0 +1,50 @@
+==================================================
+1. DATA PROFILING
+==================================================
+
+[INFO]
+<class 'pandas.DataFrame'>
+RangeIndex: 1000 entries, 0 to 999
+Data columns (total 19 columns):
+ #   Column              Non-Null Count  Dtype  
+---  ------              --------------  -----  
+ 0   id                  1000 non-null   str    
+ 1   brandName           1000 non-null   str    
+ 2   productDisplayName  1000 non-null   str    
+ 3   description         999 non-null    str    
+ 4   style_note          167 non-null    str    
+ 5   price               1000 non-null   float64
+ 6   discountedPrice     1000 non-null   float64
+ 7   articleType         1000 non-null   str    
+ 8   gender              1000 non-null   str    
+ 9   masterCategory      1000 non-null   str    
+ 10  subCategory         1000 non-null   str    
+ 11  season              1000 non-null   str    
+ 12  usage               1000 non-null   str    
+ 13  myntraRating        1000 non-null   float64
+ 14  baseColour          1000 non-null   str    
+ 15  fabric              484 non-null    str    
+ 16  fit                 428 non-null    str    
+ 17  neck                311 non-null    str    
+ 18  occasion            301 non-null    str    
+dtypes: float64(3), str(16)
+memory usage: 148.6 KB
+
+
+[DESCRIBE]
+              price  discountedPrice  myntraRating
+count   1000.000000      1000.000000   1000.000000
+mean    2331.215000      2298.447000      0.588000
+std     2205.019297      2222.819107      0.492441
+min      179.000000       179.000000      0.000000
+25%      945.000000       899.000000      0.000000
+50%     1399.000000      1395.000000      1.000000
+75%     2999.000000      2999.000000      1.000000
+max    11950.000000     11950.000000      1.000000
+
+[UNIQUE VALUES]
+- gender: 5 giá trị
+- masterCategory: 4 giá trị
+- subCategory: 14 giá trị
+- season: 4 giá trị
+- usage: 5 giá trị

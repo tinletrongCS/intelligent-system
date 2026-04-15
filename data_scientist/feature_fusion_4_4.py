@@ -10,7 +10,7 @@ class FeatureFusion:
         """
         # 1. Cấu hình đường dẫn mặc định
         default_visual = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\image_features\image_features_resnet18.npy"
-        default_text = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\text_features\text_features_minilm.npy"
+        default_text = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\text_features\text_features.npy"
         default_meta = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\metadata_features\metadata_features.npy"
         default_out_dir = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\features\final_node_features"
 

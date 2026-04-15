@@ -122,9 +122,7 @@ class GNNTrainer:
         model.eval()
         with torch.no_grad():
             final_z = model.encode(data.x, data.train_pos_edge_index).cpu().numpy()
-            emb_dir = os.path.join(self.output_dir, "final_gnn_embeddings")
-            os.makedirs(emb_dir, exist_ok=True)
-            emb_path = os.path.join(emb_dir, "final_gnn_embeddings.npy")
+            emb_path = os.path.join(self.output_dir, "final_gnn_embeddings.npy")
             np.save(emb_path, final_z)
 
         print("="*50)

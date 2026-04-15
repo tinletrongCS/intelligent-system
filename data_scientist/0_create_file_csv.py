@@ -4,7 +4,7 @@ import pandas as pd
 from tqdm import tqdm
 
 json_dir = r"E:\Hcmut material\AI\Intelligence System\archive\fashion-dataset\styles"
-output_csv = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\fashion_master_dataset.csv"
+output_csv = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data_scientist\orignal_dataset\fashion_master_dataset.csv"
 
 def extract_product_data(json_path):
     with open(json_path, 'r', encoding='utf-8') as f:
