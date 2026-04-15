@@ -19,3 +19,6 @@ class ICTBaseModel(BaseModel):
             if isinstance(val, datetime):
                 result[key] = to_ict(val)
         return result
+
+class IMessageResponse(BaseModel):
+    message: str

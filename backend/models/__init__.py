@@ -2,8 +2,9 @@ from database import Base
 from .user_model import User
 from .product_model import Product
 from .order_model import Order, OrderItem
-from .whistlist_model import Wishlist
+from .wishlist_model import Wishlist
 from .cart_model import Cart
+from .interaction_model import Interaction, InteractionType
 
 __all__ = [
     "Base",
@@ -12,5 +13,7 @@ __all__ = [
     "Order",
     "OrderItem",
     "Wishlist",
-    "Cart"
+    "Cart",
+    "Interaction",
+    "InteractionType"
 ]
