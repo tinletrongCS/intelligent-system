@@ -1,4 +1,0 @@
-Skewness gốc (Original): 3.00
-Skewness sau Log (Processed): -0.20
---------------------------------------------------
-Nhận xét: Log Transformation đã giảm thành công độ lệch của dữ liệu.

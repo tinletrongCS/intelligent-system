@@ -80,7 +80,7 @@ class TextFeatureExtractor:
         )
 
         # 5. Lưu trữ kết quả
-        save_path = os.path.join(self.output_dir, "text_features_minilm.npy")
+        save_path = os.path.join(self.output_dir, "text_features.npy")
         np.save(save_path, text_embeddings)
         
         print("="*50)

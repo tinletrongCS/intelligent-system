@@ -18,8 +18,8 @@ class FashionPreprocessor:
         # 1. Cấu hình đường dẫn mặc định
         default_input = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\orignal_dataset\fashion_original_dataset.csv"
         default_output = r"E:\Hcmut material\AI\Intelligence System\intelligent-system\data-scientist\standard_dataset\fashion_preprocessed_dataset.csv"
-        default_img = r"E:\Hcmut material\AI\Intelligence System\archive\fashion-dataset\images"
-        default_processed_img = r"E:\Hcmut material\AI\Intelligence System\archive\fashion-dataset\processed_images"
+        default_img = r"E:\Hcmut material\AI\Intelligence System\fashion-dataset\images"
+        default_processed_img = r"E:\Hcmut material\AI\Intelligence System\fashion-dataset\processed_images"
 
         # 2. Kiểm tra và gán giá trị (Fallback)
         self.input_csv = input_csv if input_csv and os.path.exists(input_csv) else default_input

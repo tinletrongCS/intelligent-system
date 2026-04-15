@@ -1,6 +1,7 @@
 # models/ai_model.py
 import uuid
-from sqlalchemy import Column, String, TIMESTAMP, func, ForeignKey, Boolean
+
+from sqlalchemy import Column, Integer, String, Boolean, Float, TIMESTAMP, func, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from database import Base
 
@@ -15,6 +16,7 @@ class ModelVersion(Base):
     gnn_emb_path = Column(String(500))
     model_weights_path = Column(String(500))
     is_active = Column(Boolean, default=True)
+    product_count = Column(Integer, nullable=False, default=0)
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
 class EDAReport(Base):

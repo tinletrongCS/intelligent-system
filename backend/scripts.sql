@@ -22,36 +22,40 @@ CREATE INDEX idx_user_username ON "user"(username);
 
 -- ============================================================
 -- 2. PRODUCT TABLE
--- ============================================================
-CREATE TABLE IF NOT EXISTS product (
+-- ===========================================================
+CREATE TABLE products (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    price INTEGER NOT NULL CHECK (price >= 0),
-    discounted_price INTEGER CHECK (discounted_price >= 0),
-    style_type VARCHAR(255),
-    product_type_id INTEGER,
-    article_number VARCHAR(255) UNIQUE,
-    visual_tag VARCHAR(255),
-    product_display_name VARCHAR(500) NOT NULL,
-    myntra_rating INTEGER CHECK (myntra_rating >= 0 AND myntra_rating <= 5),
-    variant_name VARCHAR(255),
-    gender VARCHAR(50),
-    age_group VARCHAR(100),
     brand_name VARCHAR(255) NOT NULL,
-    catalog_add_date BIGINT,
+    product_display_name VARCHAR(500) NOT NULL,
+    
+    -- Các trường phục vụ AI
+    image_url VARCHAR(500),
+    description TEXT,
+    style_note TEXT,
+    occasion VARCHAR(255),
+    cross_links VARCHAR(500),
+    is_active BOOLEAN DEFAULT TRUE,
+
+    -- Metadata phân loại
+    gender VARCHAR(50),
+    master_category VARCHAR(100),
+    sub_category VARCHAR(100),
+    article_type VARCHAR(100),
     base_colour VARCHAR(100),
-    colour1 VARCHAR(100),
-    colour2 VARCHAR(100),
-    fashion_type VARCHAR(255),
     season VARCHAR(100),
-    year VARCHAR(50),
     usage VARCHAR(100),
-    vat NUMERIC(5, 2) NOT NULL DEFAULT 0 CHECK (vat >= 0 AND vat <= 100),
-    display_categories VARCHAR(500),
-    weight VARCHAR(100),
-    navigation_id VARCHAR(255),
-    landing_page_url VARCHAR(500),
-    created_at TIMESTAMP DEFAULT timezone('Asia/Ho_Chi_Minh', now()),
-    updated_at TIMESTAMP NOT NULL DEFAULT timezone('Asia/Ho_Chi_Minh', now())
+    
+    -- Dữ liệu số
+    price FLOAT NOT NULL,
+    discounted_price FLOAT,
+    myntra_rating FLOAT,
+    fabric VARCHAR(255),
+    fit VARCHAR(100),
+    neck VARCHAR(100),
+    
+    -- Hệ thống (Tự động set theo múi giờ VN)
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('Asia/Ho_Chi_Minh', now()),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('Asia/Ho_Chi_Minh', now())
 );
 
 CREATE INDEX idx_product_brand_name ON product(brand_name);

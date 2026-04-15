@@ -1,0 +1,4 @@
+Số sản phẩm trong CSV: 1000
+Số file ảnh: 1000
+Thiếu ảnh: 0
+Ảnh dư (Orphan): 0
