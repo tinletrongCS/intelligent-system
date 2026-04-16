@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, BackgroundTasks, status
 from sqlalchemy.orm import Session
 from database import get_db
-from controllers import model_ai_controller
+from services import model_ai_service
 
 router = APIRouter(prefix="/ai", tags=["AI Pipeline"])
 
@@ -14,4 +14,4 @@ async def trigger_ai_pipeline(
     Endpoint kích hoạt quy trình huấn luyện AI. 
     Trả về 202 ngay lập tức và xử lý training dưới nền.
     """
-    return await model_ai_controller.trigger_training_controller(db, background_tasks)
+    return await model_ai_service.trigger_training_service(db, background_tasks)
