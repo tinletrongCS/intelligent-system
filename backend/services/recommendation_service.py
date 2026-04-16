@@ -135,10 +135,17 @@ async def get_recommendations_for_user(user_id: UUID, k: int, db: Session):
     return final_response
 
 
-async def get_past_recommendations_logic(user_id: UUID, version_id: UUID, db: Session):
+async def get_product_user_recommendations(user_id: UUID, version_id: UUID, db: Session):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Người dùng không tồn tại")
+
+    version = db.query(ModelVersion).filter(ModelVersion.id == version_id).first()
+    if not version:
+        raise HTTPException(
+            status_code=404, 
+            detail=f"Phiên bản Model với ID {version_id} không tồn tại trong hệ thống"
+        )
 
     past_recs = rec_repo.get_recommendations_by_user_and_version(db, user_id, version_id)
     if not past_recs:
@@ -151,10 +158,38 @@ async def get_past_recommendations_logic(user_id: UUID, version_id: UUID, db: Se
     final_results = []
     for pid in product_ids:
         if pid in product_map:
-            # Cấu trúc này khớp với PastRecommendationResponse
             final_results.append({
                 "product_id": pid,
                 "product_details": product_map[pid]
             })
 
     return final_results
+
+
+async def get_products_recommendation(product_id: UUID, version_id: UUID, k: int, db: Session):
+    target_product = db.query(Product).filter(Product.id == product_id).first()
+    if not target_product:
+        raise HTTPException(status_code=404, detail=f"Sản phẩm ID {product_id} không tồn tại")
+
+    version = db.query(ModelVersion).filter(ModelVersion.id == version_id).first()
+    if not version:
+        raise HTTPException(status_code=404, detail=f"Phiên bản Model ID {version_id} không tồn tại")
+
+    recommendations = db.query(UserRecommendation).filter(
+        UserRecommendation.product_id == product_id,
+        UserRecommendation.version_id == version_id
+    ).limit(k).all()
+
+    if not recommendations:
+        return []
+
+    final_response = []
+    for rec in recommendations:
+        final_response.append({
+            "product_id": rec.product_id,
+            "score": rec.score,
+            "rank": rec.rank,
+            "product_details": target_product
+        })
+
+    return final_response

@@ -17,3 +17,6 @@ class FeedbackResponse(ICTBaseModel):
 
     class Config:
         from_attributes = True
+
+class FeedbackUpdate(BaseModel):
+    rank: int = Field(..., ge=1, le=5, description="Rank mới phải từ 1 đến 5")
