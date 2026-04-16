@@ -3,12 +3,6 @@ from sqlalchemy import Column, Float, Integer, ForeignKey, TIMESTAMP, func
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from database import Base
 
-class ProductPriority(Base):
-    __tablename__ = "product_priorities"
-
-    product_id = Column(PG_UUID(as_uuid=True), ForeignKey("products.id"), primary_key=True)
-    priority_level = Column(Integer, default=5, server_default='5')
-
 class UserRecommendation(Base):
     __tablename__ = "user_recommendations"
 

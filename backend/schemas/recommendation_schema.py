@@ -12,14 +12,18 @@ class RecommendationBase(BaseModel):
     rank: int
     version_id: UUID
 
-class RecommendationCreate(RecommendationBase):
-    pass
-
 class UserRecommendationResponse(BaseModel):
     product_id: UUID
     score: float
     product_details: Optional[ProductResponse] = None
     rank: int
     
+    class Config:
+        from_attributes = True
+
+class PastRecommendationResponse(BaseModel):
+    product_id: UUID
+    product_details: ProductResponse
+
     class Config:
         from_attributes = True
