@@ -28,7 +28,8 @@ class TextFeatureExtractor:
 
         # 3. Thiết lập thiết bị
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        print(f"--- Text Extractor khởi tạo trên thiết bị: {self.device} ---")
+        # print(f"--- Text Extractor khởi tạo trên thiết bị: {self.device} ---")
+
 
     def _combine_text_context(self, row):
         """Gộp các trường văn bản để tạo ngữ cảnh phong phú nhất cho SBERT"""
@@ -44,9 +45,10 @@ class TextFeatureExtractor:
         
         return " ".join(clean_components).strip()
 
+
     def run_extraction(self):
         """Quy trình nạp model và trích xuất vector văn bản hàng loạt"""
-        print(f"--- Bắt đầu trích xuất Text Embeddings ({self.model_name}) ---")
+        # print(f"--- Bắt đầu trích xuất Text Embeddings ({self.model_name}) ---")
         
         # 1. Nạp dữ liệu và Đồng bộ hóa ID
         try:
@@ -67,11 +69,11 @@ class TextFeatureExtractor:
         sentences = df_final.apply(self._combine_text_context, axis=1).tolist()
         
         # 3. Nạp model Sentence-Transformer
-        print(f"Đang nạp model {self.model_name}...")
+        # print(f"Đang nạp model {self.model_name}...")
         model = SentenceTransformer(self.model_name, device=self.device)
         
         # 4. Trích xuất Embeddings theo Batch
-        print(f"Bắt đầu trích xuất cho {len(sentences)} bản ghi...")
+        # print(f"Bắt đầu trích xuất cho {len(sentences)} bản ghi...")
         text_embeddings = model.encode(
             sentences, 
             batch_size=self.batch_size, 
@@ -83,11 +85,11 @@ class TextFeatureExtractor:
         save_path = os.path.join(self.output_dir, "text_features.npy")
         np.save(save_path, text_embeddings)
         
-        print("="*50)
-        print(f"Trích xuất văn bản hoàn tất")
-        print(f"- Kích thước ma trận: {text_embeddings.shape}")
-        print(f"- File lưu tại: {save_path}")
-        print("="*50)
+        # print("="*50)
+        print(f"3_6 Trích xuất văn bản hoàn tất")
+        # print(f"- Kích thước ma trận: {text_embeddings.shape}")
+        # print(f"- File lưu tại: {save_path}")
+        # print("="*50)
         return save_path
 
 if __name__ == "__main__":

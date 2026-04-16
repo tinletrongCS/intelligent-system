@@ -4,10 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import engine, Base
 # Import router
-from routers import auth
-from routers import product
 from routers import model_ai
 from routers import auth, product, wishlist, cart
+from routers import recommendation
+from routers import feedback
 
 Base.metadata.create_all(bind=engine)
 
@@ -31,6 +31,8 @@ app.include_router(model_ai.router)
 app.include_router(product.router, prefix="/products", tags=["Products"])
 app.include_router(wishlist.router, prefix="/wishlist", tags=["Wishlist"])
 app.include_router(cart.router, prefix="/cart", tags=["Cart"])
+app.include_router(recommendation.router)
+app.include_router(feedback.router)
 
 @app.get("/", tags=["Health Check"])
 async def root():

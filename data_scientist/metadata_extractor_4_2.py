@@ -21,6 +21,7 @@ class MetadataFeatureExtractor:
 
         os.makedirs(self.output_dir, exist_ok=True)
 
+
     def run_extraction(self):
         """Thực hiện quy trình lọc và trích xuất vector Metadata"""
         print("--- Bắt đầu trích xuất Metadata Features ---")
@@ -65,12 +66,13 @@ class MetadataFeatureExtractor:
         save_path = os.path.join(self.output_dir, "metadata_features.npy")
         np.save(save_path, metadata_matrix)
         
-        print("="*50)
-        print(f"TRÍCH XUẤT METADATA HOÀN TẤT")
-        print(f"- Kích thước ma trận: {metadata_matrix.shape}")
-        print(f"- File lưu tại: {save_path}")
-        print("="*50)
+        # print("="*50)
+        print(f"3_5 Trích xuất đặc trưng metadata hoàn tất")
+        # print(f"- Kích thước ma trận: {metadata_matrix.shape}")
+        # print(f"- File lưu tại: {save_path}")
+        # print("="*50)
         return save_path
+
 
 if __name__ == "__main__":
     extractor = MetadataFeatureExtractor()

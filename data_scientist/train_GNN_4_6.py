@@ -48,11 +48,11 @@ class GNNTrainer:
 
         os.makedirs(self.output_dir, exist_ok=True)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        print(f"--- GNN Trainer khởi tạo trên thiết bị: {self.device} ---")
+        # print(f"--- GNN Trainer khởi tạo trên thiết bị: {self.device} ---")
 
     def _prepare_data(self):
         """Nạp ma trận đặc trưng và danh sách cạnh vào PyTorch Geometric"""
-        print("--- Đang chuẩn bị dữ liệu Đồ thị ---")
+        # print("--- Đang chuẩn bị dữ liệu Đồ thị ---")
         x_np = np.load(self.node_feat_path)
         edge_index_np = np.load(self.edge_index_path)
 
@@ -80,13 +80,13 @@ class GNNTrainer:
 
         # 1. CƠ CHẾ WARM START: Nạp trọng số cũ nếu có
         if last_model_path and os.path.exists(last_model_path):
-            print(f"Nạp trọng số cũ từ: {last_model_path} (Warm Start)")
+            # print(f"Nạp trọng số cũ từ: {last_model_path} (Warm Start)")
             model.load_state_dict(torch.load(last_model_path))
             # Giảm Learning Rate khi học tiếp để tinh chỉnh (Fine-tuning)
             for param_group in optimizer.param_groups:
                 param_group['lr'] = self.lr * 0.1
 
-        print(f"Bắt đầu huấn luyện: Input({in_channels}) -> {self.hidden_dim} -> {self.out_dim}")
+        # print(f"Bắt đầu huấn luyện: Input({in_channels}) -> {self.hidden_dim} -> {self.out_dim}")
         
         model.train()
         for epoch in range(1, self.epochs + 1):
@@ -112,7 +112,7 @@ class GNNTrainer:
                 model.train()
 
         # 2. Lưu kết quả
-        print("\n--- Huấn luyện hoàn tất! Đang đóng gói Version ---")
+        # print("\n--- Huấn luyện hoàn tất! Đang đóng gói Version ---")
         
         # Lưu file trọng số (.pth)
         weight_path = os.path.join(self.output_dir, "fashion_gnn_model.pth")
@@ -125,12 +125,12 @@ class GNNTrainer:
             emb_path = os.path.join(self.output_dir, "final_gnn_embeddings.npy")
             np.save(emb_path, final_z)
 
-        print("="*50)
-        print(f"Kết quả huấn luyện:")
-        print(f"- Trọng số mô hình: {weight_path}")
-        print(f"- Ma trận Embeddings: {final_z.shape}")
-        print(f"- File Embeddings lưu tại: {emb_path}")
-        print("="*50)
+        # print("="*50)
+        print(f"3_9 Kết quả huấn luyện")
+        # print(f"- Trọng số mô hình: {weight_path}")
+        # print(f"- Ma trận Embeddings: {final_z.shape}")
+        # print(f"- File Embeddings lưu tại: {emb_path}")
+        # print("="*50)
         
         return weight_path, emb_path
 
