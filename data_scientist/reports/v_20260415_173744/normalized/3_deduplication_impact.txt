@@ -1,0 +1,11 @@
+Số lượng dòng ban đầu: 1,000
+Số lượng dòng hiện tại: 871
+Tỷ lệ cắt giảm: 12.90%
+
+Chi tiết:
+                Before  After
+masterCategory               
+Apparel            586    479
+Accessories        239    230
+Footwear           173    160
+Free Items           2      2

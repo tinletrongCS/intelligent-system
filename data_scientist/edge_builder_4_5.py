@@ -23,6 +23,7 @@ class EdgeBuilder:
 
         os.makedirs(self.output_dir, exist_ok=True)
 
+
     def _load_and_sync(self):
         """Nạp dữ liệu và đồng bộ hóa ID để đảm bảo chỉ số Index chính xác"""
         try:
@@ -44,16 +45,17 @@ class EdgeBuilder:
             print(f"Lỗi nạp dữ liệu: {e}")
             sys.exit()
 
+
     def run_build(self):
         """Thực thi quy trình xây dựng danh sách cạnh (Edge List)"""
-        print("--- Bắt đầu xây dựng Edges cho Đồ thị ---")
+        # print("--- Bắt đầu xây dựng Edges cho Đồ thị ---")
         
         df_final, id_to_idx = self._load_and_sync()
         edge_list = []
 
         # 1. Tạo cạnh dựa trên Brand (Thương hiệu)
         # Mục đích: Nối các sản phẩm cùng hãng để GNN học phong cách thiết kế chung.
-        print("Đang nối cạnh theo Brand...")
+        # print("Đang nối cạnh theo Brand...")
         brand_groups = df_final.groupby('brand_label').indices
         for brand, indices in tqdm(brand_groups.items(), desc="Brand Edges"):
             if len(indices) > 1:
@@ -72,7 +74,7 @@ class EdgeBuilder:
 
         # 2. Tạo cạnh dựa trên Article Type (Loại sản phẩm)
         # Mục đích: Nối các sản phẩm cùng loại (ví dụ: cùng là Giày) để học tính năng.
-        print("Đang nối cạnh theo Article Type...")
+        # print("Đang nối cạnh theo Article Type...")
         type_groups = df_final.groupby('articleType_label').indices
         for a_type, indices in tqdm(type_groups.items(), desc="Type Edges"):
             if len(indices) > 1:
@@ -86,7 +88,7 @@ class EdgeBuilder:
                             edge_list.append([v, u])
 
         # 3. Chuẩn hóa và lưu trữ
-        print("Đang chuẩn hóa Edge Index...")
+        # print("Đang chuẩn hóa Edge Index...")
         # Chuyển thành định dạng COO (Coordinate Format) [2, E] chuẩn PyTorch Geometric
         edge_index = np.array(edge_list).T
         # Loại bỏ các cạnh trùng lặp để tiết kiệm bộ nhớ
@@ -98,13 +100,13 @@ class EdgeBuilder:
         np.save(edge_out, edge_index)
         pd.DataFrame(list(id_to_idx.items()), columns=['id', 'idx']).to_csv(mapping_out, index=False)
 
-        print("="*50)
-        print(f"Xây dựng đồ thị hoàn tất")
-        print(f"- Tổng số Nodes: {len(df_final):,}")
-        print(f"- Tổng số Edges: {edge_index.shape[1]:,}")
-        print(f"- File cạnh lưu tại: {edge_out}")
-        print(f"- File mapping lưu tại: {mapping_out}")
-        print("="*50)
+        # print("="*50)
+        print(f"3_8 Xây dựng đồ thị hoàn tất")
+        # print(f"- Tổng số Nodes: {len(df_final):,}")
+        # print(f"- Tổng số Edges: {edge_index.shape[1]:,}")
+        # print(f"- File cạnh lưu tại: {edge_out}")
+        # print(f"- File mapping lưu tại: {mapping_out}")
+        # print("="*50)
         return edge_out, mapping_out
 
 if __name__ == "__main__":

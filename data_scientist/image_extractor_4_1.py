@@ -19,8 +19,10 @@ class FashionImageDataset(Dataset):
         self.img_dir = img_dir
         self.transform = transform
 
+
     def __len__(self):
         return len(self.data)
+
 
     def __getitem__(self, idx):
         img_id = self.data.iloc[idx]['id']
@@ -29,13 +31,13 @@ class FashionImageDataset(Dataset):
         try:
             image = Image.open(img_path).convert('RGB')
         except Exception as e:
-            # Fallback nếu ảnh lỗi: Trả về ảnh đen để không làm gãy batch
             image = Image.new('RGB', (224, 224), (0, 0, 0))
             
         if self.transform:
             image = self.transform(image)
             
         return image, str(img_id)
+
 
 class ImageFeatureExtractor:
     def __init__(self, input_csv=None, image_dir=None, output_dir=None, batch_size=64):
@@ -62,6 +64,7 @@ class ImageFeatureExtractor:
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
 
+
     def _get_model(self):
         """Khởi tạo ResNet-18 và loại bỏ lớp Fully Connected (FC)"""
         print("Đang nạp mô hình ResNet-18...")
@@ -71,17 +74,17 @@ class ImageFeatureExtractor:
         model.eval()
         return model
 
+
     def run_extraction(self):
         """Quy trình trích xuất đặc trưng hàng loạt"""
         # 1. Load và lọc dữ liệu
         raw_df = pd.read_csv(self.input_csv)
         raw_df['id'] = raw_df['id'].astype(str)
         
-        # Chỉ giữ lại ID có file ảnh tồn tại thực tế
         existing_files = set([f.split('.')[0] for f in os.listdir(self.image_dir) if f.endswith('.jpg')])
         filtered_df = raw_df[raw_df['id'].isin(existing_files)].copy()
         
-        print(f"Bắt đầu trích xuất cho {len(filtered_df)} sản phẩm hợp lệ.")
+        # print(f"Bắt đầu trích xuất cho {len(filtered_df)} sản phẩm hợp lệ.")
 
         dataset = FashionImageDataset(filtered_df, self.image_dir, transform=self.transform)
         dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False, num_workers=2, pin_memory=True)
@@ -102,7 +105,7 @@ class ImageFeatureExtractor:
                 all_ids.extend(ids)
 
         # 3. Tổng hợp và lưu trữ
-        print("\nĐang đóng gói ma trận đặc trưng...")
+        # print("\nĐang đóng gói ma trận đặc trưng...")
         feature_matrix = np.vstack(all_features)
         
         feat_save_path = os.path.join(self.output_dir, "image_features_resnet18.npy")
@@ -111,12 +114,13 @@ class ImageFeatureExtractor:
         np.save(feat_save_path, feature_matrix)
         pd.DataFrame(all_ids, columns=['id']).to_csv(id_save_path, index=False)
 
-        print("="*50)
-        print(f"TRÍCH XUẤT ẢNH HOÀN TẤT")
-        print(f"- Ma trận đặc trưng: {feature_matrix.shape}")
-        print(f"- File đặc trưng: {feat_save_path}")
-        print(f"- File mapping ID: {id_save_path}")
-        print("="*50)
+        # print("="*50)
+        print(f"3_4 Trích xuất đặc trưng ảnh hoàn tất")
+        # print(f"- Ma trận đặc trưng: {feature_matrix.shape}")
+        # print(f"- File đặc trưng: {feat_save_path}")
+        # print(f"- File mapping ID: {id_save_path}")
+        # print("="*50)
+
 
 if __name__ == "__main__":
     extractor = ImageFeatureExtractor(batch_size=64)

@@ -1,0 +1,4 @@
+Tổng số Nodes: 871
+Số cụm (Brands): 28
+Cụm lớn nhất: 107 nodes
+Số node cô lập (1 prod/brand): 3

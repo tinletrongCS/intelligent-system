@@ -22,9 +22,10 @@ class FeatureFusion:
 
         os.makedirs(self.output_dir, exist_ok=True)
 
+
     def run_fusion(self):
         """Thực hiện quy trình hợp nhất và chuẩn hóa vector đa phương thức"""
-        print("--- Đang bắt đầu quy trình Feature Fusion ---")
+        # print("--- Đang bắt đầu quy trình Feature Fusion ---")
         
         # 1. Nạp các ma trận đặc trưng
         try:
@@ -41,9 +42,9 @@ class FeatureFusion:
             print("Vui lòng kiểm tra lại bước đồng bộ ID ở các script Extractor trước đó.")
             return
 
-        print(f"Kích thước Visual: {visual_feat.shape}")
-        print(f"Kích thước Text:   {text_feat.shape}")
-        print(f"Kích thước Meta:   {meta_feat.shape}")
+        # print(f"Kích thước Visual: {visual_feat.shape}")
+        # print(f"Kích thước Text:   {text_feat.shape}")
+        # print(f"Kích thước Meta:   {meta_feat.shape}")
 
         # 2. Hợp nhất (Concatenation)
         # Nối theo chiều ngang (axis=1) để tạo một vector dài khoảng 911+ chiều
@@ -52,9 +53,8 @@ class FeatureFusion:
         # 3. Chuẩn hóa L2 (L2 Normalization)
         # Giúp đưa tất cả vector về cùng một thang đo (độ dài bằng 1)
         # Điều này cực kỳ quan trọng cho Cosine Similarity và sự ổn định của GNN sau này.
-        print("Đang thực hiện chuẩn hóa L2...")
+        # print("Đang thực hiện chuẩn hóa L2...")
         norms = np.linalg.norm(final_features, axis=1, keepdims=True)
-        # Tránh lỗi chia cho 0
         norms[norms == 0] = 1
         final_features = final_features / norms
 
@@ -62,13 +62,14 @@ class FeatureFusion:
         save_path = os.path.join(self.output_dir, "final_node_features.npy")
         np.save(save_path, final_features.astype(np.float32))
 
-        print("="*50)
-        print(f"Hoàn thành Feature Fusion")
-        print(f"- Ma trận Node Features: {final_features.shape}")
-        print(f"- Mỗi sản phẩm là 1 vector {final_features.shape[1]} chiều.")
-        print(f"- File lưu tại: {save_path}")
-        print("="*50)
+        # print("="*50)
+        print(f"3_7 Hoàn thành Feature Fusion")
+        # print(f"- Ma trận Node Features: {final_features.shape}")
+        # print(f"- Mỗi sản phẩm là 1 vector {final_features.shape[1]} chiều.")
+        # print(f"- File lưu tại: {save_path}")
+        # print("="*50)
         return save_path
+
 
 if __name__ == "__main__":
     fuser = FeatureFusion()

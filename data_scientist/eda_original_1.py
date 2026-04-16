@@ -29,10 +29,11 @@ class OriginalDatasetEDA:
         # 3. Load dữ liệu
         try:
             self.df = pd.read_csv(self.input_path)
-            print(f"--- Dữ liệu đã được load từ: {self.input_path} ---")
+            # print(f"--- Dữ liệu đã được load từ: {self.input_path} ---")
         except Exception as e:
-            print(f"Lỗi nghiêm trọng: Không thể load file CSV. {e}")
+            print(f"Lỗi: Không thể load file CSV. {e}")
             sys.exit()
+
 
     def save_text_report(self, task_name, content):
         """Hỗ trợ lưu nội dung văn bản vào file .txt"""
@@ -40,8 +41,9 @@ class OriginalDatasetEDA:
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
 
+
     def data_profiling_1(self):
-        task_name = "1_data_profiling"
+        task_name = "3_1_1_data_profiling"
         print(f"Đang thực hiện {task_name}...")
         
         buffer = io.StringIO()
@@ -62,8 +64,9 @@ class OriginalDatasetEDA:
                 
         self.save_text_report(task_name, "\n".join(report))
 
+
     def missing_value_analysis_2(self):
-        task_name = "2_missing_value_analysis"
+        task_name = "3_1_2_missing_value_analysis"
         print(f"Đang thực hiện {task_name}...")
         
         null_counts = self.df.isnull().sum()
@@ -82,8 +85,9 @@ class OriginalDatasetEDA:
         plt.savefig(os.path.join(self.output_dir, f"{task_name}.png"), dpi=300, bbox_inches='tight')
         plt.close()
 
+
     def category_distribution_3(self):
-        task_name = "3_category_distribution"
+        task_name = "3_1_3_category_distribution"
         print(f"Đang thực hiện {task_name}...")
         
         fig, axes = plt.subplots(1, 3, figsize=(20, 6))
@@ -104,8 +108,9 @@ class OriginalDatasetEDA:
         plt.savefig(os.path.join(self.output_dir, f"{task_name}_heatmap.png"), dpi=300)
         plt.close()
 
+
     def attribute_variance_4(self):
-        task_name = "4_attribute_variance"
+        task_name = "3_1_4_attribute_variance"
         print(f"Đang thực hiện {task_name}...")
         
         deep_attrs = ['fabric', 'fit', 'neck', 'occasion']
@@ -127,8 +132,9 @@ class OriginalDatasetEDA:
         plt.savefig(os.path.join(self.output_dir, f"{task_name}.png"), dpi=300)
         plt.close()
 
+
     def price_discount_analysis_5(self):
-        task_name = "5_price_analysis"
+        task_name = "3_1_5_price_analysis"
         print(f"Đang thực hiện {task_name}...")
         
         # Xử lý tên cột linh hoạt cho discountedPrice hoặc discounted_price
@@ -148,8 +154,9 @@ class OriginalDatasetEDA:
         plt.savefig(os.path.join(self.output_dir, f"{task_name}_boxplot.png"), dpi=300)
         plt.close()
 
+
     def rating_insights_6(self):
-        task_name = "6_rating_insights"
+        task_name = "3_1_6_rating_insights"
         print(f"Đang thực hiện {task_name}...")
         
         # Xử lý tên cột myntraRating hoặc myntra_rating
@@ -164,8 +171,9 @@ class OriginalDatasetEDA:
             zero_rating_pct = (self.df[rating_col] == 0).sum() / len(self.df) * 100
             self.save_text_report(task_name, f"Tỷ lệ sản phẩm có Rating = 0: {zero_rating_pct:.2f}%")
 
+
     def text_semantic_eda_7(self):
-        task_name = "7_text_semantic"
+        task_name = "3_1_7_text_semantic"
         print(f"Đang thực hiện {task_name}...")
         
         # Style Note
@@ -194,8 +202,9 @@ class OriginalDatasetEDA:
             wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_names)
             wordcloud.to_file(os.path.join(self.output_dir, f"{task_name}_wordcloud.png"))
 
+
     def brand_dominance_8(self):
-        task_name = "8_brand_dominance"
+        task_name = "3_1_8_brand_dominance"
         print(f"Đang thực hiện {task_name}...")
         
         brand_col = 'brandName' if 'brandName' in self.df.columns else 'brand_name'
@@ -212,8 +221,9 @@ class OriginalDatasetEDA:
             ]
             self.save_text_report(task_name, "\n".join(report))
 
+
     def consistency_check_9(self):
-        task_name = "9_consistency_check"
+        task_name = "3_1_9_consistency_check"
         print(f"Đang thực hiện {task_name}...")
         
         if not os.path.exists(self.image_dir):
@@ -231,8 +241,9 @@ class OriginalDatasetEDA:
         ]
         self.save_text_report(task_name, "\n".join(report))
 
+
     def duplicate_check_10(self):
-        task_name = "10_duplicate_check"
+        task_name = "3_1_10_duplicate_check"
         print(f"Đang thực hiện {task_name}...")
         
         soft_duplicates = self.df[self.df.duplicated(subset=['productDisplayName', 'gender', 'baseColour'], keep=False)]
@@ -245,7 +256,7 @@ class OriginalDatasetEDA:
 
     def run_all(self):
         """Kích hoạt toàn bộ Pipeline EDA"""
-        print("=== Bắt đầu chạy EDA trên Original Dataset ===")
+        # print("=== Bắt đầu chạy EDA trên Original Dataset ===")
         self.data_profiling_1()
         self.missing_value_analysis_2()
         self.category_distribution_3()
@@ -256,7 +267,7 @@ class OriginalDatasetEDA:
         self.brand_dominance_8()
         self.consistency_check_9()
         self.duplicate_check_10()
-        print(f"=== EDA hoàn tất. Kết quả được lưu tại: {self.output_dir} ===")
+        # print(f"=== EDA hoàn tất. Kết quả được lưu tại: {self.output_dir} ===")
 
 if __name__ == "__main__":
     eda_tool = OriginalDatasetEDA()

@@ -41,7 +41,7 @@ class FashionPreprocessor:
         # 4. Load dữ liệu
         try:
             self.df = pd.read_csv(self.input_csv)
-            print(f"--- Đã nạp dữ liệu từ: {self.input_csv} ---")
+            # print(f"--- Đã nạp dữ liệu từ: {self.input_csv} ---")
         except Exception as e:
             print(f"Lỗi: Không thể nạp file CSV. {e}")
             sys.exit()
@@ -67,6 +67,7 @@ class FashionPreprocessor:
         result = " ".join(words)
         return result if result != "" else "not found"
 
+
     def filter_missing_images(self):
         """Bước 1: Lọc bỏ những sản phẩm không có file ảnh vật lý"""
         if not os.path.exists(self.image_dir):
@@ -77,7 +78,8 @@ class FashionPreprocessor:
         self.df['id_str'] = self.df['id'].astype(str)
         initial_len = len(self.df)
         self.df = self.df[self.df['id_str'].isin(image_files)]
-        print(f"1. Đã lọc ảnh. Còn lại: {len(self.df)}/{initial_len} dòng.")
+        print(f"3_2_1. Đã lọc ảnh. Còn lại: {len(self.df)}/{initial_len} dòng.")
+
 
     def handle_missing_values(self):
         """Bước 2: Xử lý giá trị Null dựa trên logic của Khải"""
@@ -97,7 +99,8 @@ class FashionPreprocessor:
             if col in self.df.columns:
                 mode_val = self.df[col].mode()
                 self.df[col] = self.df[col].fillna(mode_val[0] if not mode_val.empty else "Unknown")
-        print("2. Đã xử lý giá trị thiếu.")
+        print("3_2_2. Đã xử lý giá trị thiếu.")
+
 
     def deduplicate(self):
         """Bước 3: Lọc trùng lặp dựa trên thuộc tính và độ dài mô tả"""
@@ -115,7 +118,8 @@ class FashionPreprocessor:
             
             self.df = self.df.drop_duplicates(subset=subset_cols, keep='first')
             self.df = self.df.drop(columns=['desc_len'])
-            print(f"3. Đã lọc trùng lặp. Còn lại: {len(self.df)} dòng.")
+            print(f"3_2_3. Đã lọc trùng lặp. Còn lại: {len(self.df)} dòng.")
+
 
     def clean_text_columns(self):
         """Bước 4: Tiền xử lý các cột văn bản"""
@@ -124,6 +128,7 @@ class FashionPreprocessor:
             if col in self.df.columns:
                 print(f"--- Đang làm sạch cột: {col}")
                 self.df[col] = self.df[col].apply(self.clean_text)
+
 
     def encode_features(self):
         """Bước 5: Mã hóa nhãn và One-hot"""
@@ -140,7 +145,8 @@ class FashionPreprocessor:
         cat_cols = [c for c in cat_cols if c in self.df.columns]
         if cat_cols:
             self.df = pd.get_dummies(self.df, columns=cat_cols, prefix=[c[:3] for c in cat_cols], dtype=int)
-        print("4. Đã mã hóa các đặc trưng phân loại.")
+        print("3_2_4. Đã mã hóa các đặc trưng phân loại.")
+
 
     def scale_numerical(self):
         """Bước 6: Chuẩn hóa dữ liệu số (Price log & Rating norm)"""
@@ -150,7 +156,8 @@ class FashionPreprocessor:
         rating_col = 'myntraRating' if 'myntraRating' in self.df.columns else 'myntra_rating'
         if rating_col in self.df.columns:
             self.df['rating_norm'] = self.df[rating_col] / 5.0
-        print("5. Đã chuẩn hóa dữ liệu số.")
+        print("3_2_5. Đã chuẩn hóa dữ liệu số.")
+
 
     def process_images(self, resize_dim=(224, 224)):
         """Bước 7: Resize ảnh vật lý (Optional - mặc định tắt để tiết kiệm thời gian)"""
@@ -167,11 +174,12 @@ class FashionPreprocessor:
                     cv2.imwrite(os.path.join(self.processed_img_dir, f"{img_id}.jpg"), img_resized)
                     count += 1
             if count % 5000 == 0 and count > 0: print(f"   > Đã xử lý {count} ảnh...")
-        print(f"--- Hoàn tất xử lý {count} ảnh.")
+        # print(f"--- Hoàn tất xử lý {count} ảnh.")
+
 
     def run_all(self, process_imgs=False):
         """Thực thi toàn bộ quy trình Pipeline"""
-        print("=== Bắt đầu quy trình tiền xử lý (PREPROCESSING) ===")
+        # print("=== Bắt đầu quy trình tiền xử lý (PREPROCESSING) ===")
         self.filter_missing_images()
         self.handle_missing_values()
         self.deduplicate()
@@ -187,7 +195,7 @@ class FashionPreprocessor:
             self.df = self.df.drop(columns=['id_str'])
             
         self.df.to_csv(self.output_csv, index=False, encoding='utf-8-sig')
-        print(f"=== Tiền xử lí hoàn tất. File lưu tại: {self.output_csv} ===")
+        # print(f"=== Tiền xử lí hoàn tất. File lưu tại: {self.output_csv} ===")
 
 if __name__ == "__main__":
     preprocessor = FashionPreprocessor()

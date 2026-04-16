@@ -28,11 +28,12 @@ class NormalizedDatasetEDA:
         try:
             self.df_clean = pd.read_csv(self.standard_csv)
             self.df_raw = pd.read_csv(self.original_csv)
-            print(f"--- Đã load dữ liệu chuẩn hóa: {len(self.df_clean)} dòng ---")
-            print(f"--- Đã load dữ liệu gốc để so sánh: {len(self.df_raw)} dòng ---")
+            # print(f"--- Đã load dữ liệu chuẩn hóa: {len(self.df_clean)} dòng ---")
+            # print(f"--- Đã load dữ liệu gốc để so sánh: {len(self.df_raw)} dòng ---")
         except Exception as e:
             print(f"Lỗi load dữ liệu: {e}")
             sys.exit()
+
 
     def save_text_report(self, task_name, content):
         """Tiện ích lưu báo cáo văn bản"""
@@ -40,8 +41,9 @@ class NormalizedDatasetEDA:
         with open(file_path, "w", encoding='utf-8') as f:
             f.write(content)
 
+
     def verify_zero_null_1(self):
-        task_name = "1_zero_null_check"
+        task_name = "3_3_1_zero_null_check"
         print(f"Đang thực hiện {task_name}...")
         null_summary = self.df_clean.isnull().sum()
         total_null = null_summary.sum()
@@ -50,8 +52,9 @@ class NormalizedDatasetEDA:
         report += "-"*30 + "\n" + null_summary.to_string()
         self.save_text_report(task_name, report)
 
+
     def check_price_distribution_2(self):
-        task_name = "2_price_distribution"
+        task_name = "3_3_2_price_distribution"
         print(f"Đang thực hiện {task_name}...")
 
         # Tìm tên cột giá (linh hoạt camelCase/snake_case)
@@ -78,8 +81,9 @@ class NormalizedDatasetEDA:
         report += "Nhận xét: " + ("Thành công giảm độ lệch." if abs(skew_clean) < abs(skew_raw) else "Cần kiểm tra lại.")
         self.save_text_report(task_name, report)
 
+
     def analyze_deduplication_impact_3(self):
-        task_name = "3_deduplication_impact"
+        task_name = "3_3_3_deduplication_impact"
         print(f"Đang thực hiện {task_name}...")
         
         raw_count = len(self.df_raw)
@@ -104,8 +108,9 @@ class NormalizedDatasetEDA:
         report += "\nChi tiết:\n" + comparison_df.to_string()
         self.save_text_report(task_name, report)
 
+
     def check_label_diversity_4(self):
-        task_name = "4_label_diversity"
+        task_name = "3_3_4_label_diversity"
         print(f"Đang thực hiện {task_name}...")
         label_cols = [c for c in ['brand_label', 'productName_label', 'articleType_label'] if c in self.df_clean.columns]
         
@@ -121,8 +126,9 @@ class NormalizedDatasetEDA:
         report = f"Thống kê Cardinality:\n" + "\n".join([f"- {k}: {v} unique" for k,v in diversity.items()])
         self.save_text_report(task_name, report)
 
+
     def check_onehot_sparsity_5(self):
-        task_name = "5_onehot_sparsity"
+        task_name = "3_3_5_onehot_sparsity"
         print(f"Đang thực hiện {task_name}...")
         onehot_cols = [col for col in self.df_clean.columns if col.startswith(('gen_', 'use_', 'sea_'))]
         
@@ -138,8 +144,9 @@ class NormalizedDatasetEDA:
         plt.close()
         self.save_text_report(task_name, sparsity_df.to_string(index=False))
 
+
     def analyze_text_shrinkage_6(self):
-        task_name = "6_text_shrinkage"
+        task_name = "3_3_6_text_shrinkage"
         print(f"Đang thực hiện {task_name}...")
         
         # Check columns description/style_note
@@ -160,8 +167,9 @@ class NormalizedDatasetEDA:
         plt.savefig(os.path.join(self.output_dir, f"{task_name}.png"), dpi=300)
         plt.close()
 
+
     def analyze_correlation_7(self):
-        task_name = "7_feature_correlation"
+        task_name = "3_3_7_feature_correlation"
         print(f"Đang thực hiện {task_name}...")
         num_cols = self.df_clean.select_dtypes(include=[np.number]).columns.tolist()
         important_cols = [c for c in ['price_log', 'rating_norm', 'brand_label', 'articleType_label'] if c in num_cols]
@@ -173,8 +181,9 @@ class NormalizedDatasetEDA:
         plt.savefig(os.path.join(self.output_dir, f"{task_name}.png"), dpi=300)
         plt.close()
 
+
     def generate_clean_wordcloud_8(self):
-        task_name = "8_clean_wordcloud"
+        task_name = "3_3_8_clean_wordcloud"
         print(f"Đang thực hiện {task_name}...")
         desc_col = 'description' if 'description' in self.df_clean.columns else 'productDescription'
         
@@ -184,8 +193,9 @@ class NormalizedDatasetEDA:
                 wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
                 wordcloud.to_file(os.path.join(self.output_dir, f"{task_name}.png"))
 
+
     def check_post_scaling_outliers_9(self):
-        task_name = "9_post_scaling_boxplot"
+        task_name = "3_3_9_post_scaling_boxplot"
         print(f"Đang thực hiện {task_name}...")
         num_cols = [c for c in ['price_log', 'rating_norm'] if c in self.df_clean.columns]
         
@@ -197,9 +207,10 @@ class NormalizedDatasetEDA:
         plt.savefig(os.path.join(self.output_dir, f"{task_name}.png"), dpi=300)
         plt.close()
 
+
     def evaluate_gnn_readiness_10(self):
         """Bước quan trọng nhất: Đánh giá khả năng kết nối đồ thị"""
-        task_name = "10_gnn_readiness"
+        task_name = "3_3_10_gnn_readiness"
         print(f"Đang thực hiện {task_name}...")
         
         brand_col = 'brand_label' if 'brand_label' in self.df_clean.columns else 'brand_name'
@@ -219,7 +230,7 @@ class NormalizedDatasetEDA:
             self.save_text_report(task_name, report)
 
     def run_all(self):
-        print("=== BẮT ĐẦU EDA TRÊN NORMALIZED DATASET ===")
+        # print("=== BẮT ĐẦU EDA TRÊN NORMALIZED DATASET ===")
         self.verify_zero_null_1()
         self.check_price_distribution_2()
         self.analyze_deduplication_impact_3()
@@ -230,7 +241,7 @@ class NormalizedDatasetEDA:
         self.generate_clean_wordcloud_8()
         self.check_post_scaling_outliers_9()
         self.evaluate_gnn_readiness_10()
-        print(f"=== HOÀN TẤT EDA. KẾT QUẢ TẠI: {self.output_dir} ===")
+        # print(f"=== HOÀN TẤT EDA. KẾT QUẢ TẠI: {self.output_dir} ===")
 
 if __name__ == "__main__":
     eda_normalized = NormalizedDatasetEDA()
