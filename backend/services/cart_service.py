@@ -5,6 +5,9 @@ from models.interaction_model import Interaction, InteractionType
 import repositories.cart_repository as cart_repo
 
 async def add_product_to_cart(user_id: UUID, product_id: UUID, request_quantity: int, db: Session):
+    if request_quantity < 1:
+        raise HTTPException(status_code=422, detail="Số lượng phải lớn hơn 0")
+
     product = cart_repo.check_product_exists(db, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Sản phẩm không tồn tại")
@@ -33,3 +36,21 @@ async def add_product_to_cart(user_id: UUID, product_id: UUID, request_quantity:
         raise HTTPException(status_code=500, detail="Lỗi hệ thống: không thể thêm vào giỏ hàng")
 
     return cart_item
+
+async def get_user_cart(user_id: UUID, db: Session):
+    return cart_repo.get_user_cart(db, user_id)
+
+async def update_cart_quantity(user_id: UUID, product_id: UUID, quantity: int, db: Session):
+    if quantity < 1:
+        raise HTTPException(status_code=422, detail="Số lượng phải lớn hơn 0")
+
+    cart_item = cart_repo.update_cart_quantity(db, user_id, product_id, quantity)
+    if not cart_item:
+        raise HTTPException(status_code=404, detail="Sản phẩm không có trong giỏ hàng")
+    return cart_item
+
+async def remove_cart_item(user_id: UUID, product_id: UUID, db: Session):
+    removed = cart_repo.remove_cart_item(db, user_id, product_id)
+    if not removed:
+        raise HTTPException(status_code=404, detail="Sản phẩm không có trong giỏ hàng")
+    return {"message": "Đã xóa sản phẩm khỏi giỏ hàng"}
