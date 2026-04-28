@@ -58,3 +58,15 @@ async def update_product_quantity_logic(product_id: UUID, quantity: int, db: Ses
         )
     
     return product
+
+async def delete_product_logic(product_id: UUID, db: Session):
+    product = product_repo.get_product_by_id(db, product_id)
+    if not product:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Sản phẩm với ID {product_id} không tồn tại"
+        )
+
+    db.delete(product)
+    db.commit()
+    return {"message": "Đã xóa sản phẩm"}

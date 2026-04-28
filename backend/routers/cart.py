@@ -20,3 +20,27 @@ async def add_product_to_cart(
     db: Session = Depends(get_db)
 ):
     return await cart_service.add_product_to_cart(current_user.id, cart_in.product_id, cart_in.quantity, db)
+
+@router.get("", response_model=List[CartItemResponse])
+async def get_my_cart(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return await cart_service.get_user_cart(current_user.id, db)
+
+@router.patch("/{product_id}", response_model=CartItemResponse)
+async def update_cart_item(
+    product_id: UUID,
+    cart_in: CartItemAdd,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return await cart_service.update_cart_quantity(current_user.id, product_id, cart_in.quantity, db)
+
+@router.delete("/{product_id}", response_model=IMessageResponse)
+async def remove_cart_item(
+    product_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return await cart_service.remove_cart_item(current_user.id, product_id, db)
