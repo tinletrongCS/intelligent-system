@@ -4,6 +4,7 @@ import uuid
 from sqlalchemy import Column, Integer, String, Boolean, Float, TIMESTAMP, func, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from database import Base
+from sqlalchemy.dialects.postgresql import JSONB
 
 class ModelVersion(Base):
     __tablename__ = "model_versions"
@@ -19,6 +20,7 @@ class ModelVersion(Base):
     product_count = Column(Integer, nullable=False, default=0)
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
+
 class EDAReport(Base):
     __tablename__ = "eda_reports"
 
@@ -27,7 +29,4 @@ class EDAReport(Base):
     version_id = Column(PG_UUID(as_uuid=True), ForeignKey("model_versions.id"))
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     
-    # Lưu đường dẫn tới các file kết quả
-    data_profiling_txt = Column(String(500))
-    missing_value_plot = Column(String(500))
-    category_distribution_plot = Column(String(500))
+    report_files = Column(JSONB)

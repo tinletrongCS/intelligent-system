@@ -10,7 +10,7 @@ from models.user_model import User, Role
 from core.security import get_password_hash
 # Import router
 # from routers import model_ai  # Temporarily commented to avoid installing all ML dependencies
-from routers import auth, product, wishlist, cart, order, dashboard, user
+from routers import auth, product, wishlist, cart, order, dashboard, user, model_ai
 from routers import recommendation
 from routers import feedback
 
@@ -60,7 +60,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
-# app.include_router(model_ai.router)  # Temporarily disabled
+app.include_router(model_ai.router, prefix="/ai", tags=["AI Pipeline"])  # Temporarily disabled
 app.include_router(product.router, prefix="/products", tags=["Products"])
 app.include_router(wishlist.router, prefix="/wishlist", tags=["Wishlist"])
 app.include_router(cart.router, prefix="/cart", tags=["Cart"])
