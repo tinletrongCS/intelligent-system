@@ -166,12 +166,18 @@ class AIPipelineService:
 
 
     def _save_eda_to_db(self, model_id, eda_type, report_dir: Path):
+        files_dict = {}
+        
+        if report_dir.exists():
+            for file_path in report_dir.glob("*"):
+                if file_path.is_file():
+                    relative_path = self._get_relative_path(file_path)
+                    files_dict[file_path.name] = relative_path
+
         report = EDAReport(
             version_id=model_id,
             eda_type=eda_type,
-            data_profiling_txt=self._get_relative_path(report_dir / "1_data_profiling.txt"),
-            missing_value_plot=self._get_relative_path(report_dir / "2_missing_value_analysis.png"),
-            category_distribution_plot=self._get_relative_path(report_dir / "3_category_distribution.png")
+            report_files=files_dict
         )
         self.db.add(report)
         self.db.commit()
@@ -207,56 +213,87 @@ class AIPipelineService:
         self.db.commit()
 
 
-async def run_full_process_background(self):
-    """
-    Hàm thực thi pipeline AI chạy ngầm. 
-    Lưu ý: Lỗi ở đây sẽ được ghi nhận vào log hệ thống.
-    """
-    try:
-        # 1. Đồng bộ dữ liệu & Kiểm tra số lượng
-        actual_count, products = self.sync_db_to_ai_input()
-        if not products:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Không tìm thấy sản phẩm nào trong cơ sở dữ liệu để đồng bộ."
-            )
+    async def run_full_process_background(self):
+        """
+        Hàm thực thi pipeline AI chạy ngầm. 
+        Lưu ý: Lỗi ở đây sẽ được ghi nhận vào log hệ thống.
+        """
+        try:
+            # 1. Đồng bộ dữ liệu & Kiểm tra số lượng
+            actual_count, products = self.sync_db_to_ai_input()
+            if not products:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Không tìm thấy sản phẩm nào trong cơ sở dữ liệu để đồng bộ."
+                )
 
-        # 2. Kiểm tra thư mục ảnh nguồn (Check tồn tại của ổ E hoặc folder)
-        if not self.source_images_dir.exists():
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Thư mục ảnh nguồn không tồn tại: {self.source_images_dir}"
+            # 2. Kiểm tra thư mục ảnh nguồn (Check tồn tại của ổ E hoặc folder)
+            if not self.source_images_dir.exists():
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Thư mục ảnh nguồn không tồn tại: {self.source_images_dir}"
+                )
+                
+            self.download_product_images(products)
+
+            # 3. Tạo bản ghi Version tạm thời
+            v_tag = f"v_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            new_version = ModelVersion(
+                version_tag=v_tag,
+                product_count=actual_count,
+                is_active=False
             )
+            self.db.add(new_version)
+            self.db.commit()
+            self.db.refresh(new_version)
+
+            # 4. Chạy Domino (EDA, Extractors, Training), nếu các hàm bên trong execute_ai_domino lỗi, nó sẽ văng vào khối except
+            self.execute_ai_domino(v_tag, new_version.id)
+
+            # 5. Archive & Kích hoạt mô hình
+            self.finalize_version_archive(v_tag, new_version)
             
-        self.download_product_images(products)
-
-        # 3. Tạo bản ghi Version tạm thời
-        v_tag = f"v_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        new_version = ModelVersion(
-            version_tag=v_tag,
-            product_count=actual_count,
-            is_active=False
-        )
-        self.db.add(new_version)
-        self.db.commit()
-        self.db.refresh(new_version)
-
-        # 4. Chạy Domino (EDA, Extractors, Training), nếu các hàm bên trong execute_ai_domino lỗi, nó sẽ văng vào khối except
-        self.execute_ai_domino(v_tag, new_version.id)
-
-        # 5. Archive & Kích hoạt mô hình
-        self.finalize_version_archive(v_tag, new_version)
+        except HTTPException as http_exc:
+            self.db.rollback()
+            raise http_exc
         
-    except HTTPException as http_exc:
-        self.db.rollback()
-        raise http_exc
-    
-    except Exception as e:
-        self.db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Pipeline sụp đổ do lỗi hệ thống: {str(e)}"
-        )
+        except Exception as e:
+            self.db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Pipeline sụp đổ do lỗi hệ thống: {str(e)}"
+            )
+        
+    async def get_latest_eda_report_service(self, eda_type: str):
+        """
+        Logic tìm version active mới nhất và trả về báo cáo EDA tương ứng.
+        eda_type: 'original' hoặc 'normalized'
+        """
+        # 1. Tìm phiên bản mô hình đang hoạt động mới nhất
+        latest_version = self.db.query(ModelVersion)\
+            .filter(ModelVersion.is_active == True)\
+            .order_by(desc(ModelVersion.created_at))\
+            .first()
+
+        if not latest_version:
+            return None, "Không tìm thấy phiên bản mô hình nào đang hoạt động."
+
+        # 2. Lấy báo cáo EDA dựa trên version_id và loại (original/normalized)
+        report = self.db.query(EDAReport)\
+            .filter(EDAReport.version_id == latest_version.id)\
+            .filter(EDAReport.eda_type == eda_type)\
+            .first()
+
+        if not report:
+            return None, f"Không tìm thấy báo cáo {eda_type} cho phiên bản {latest_version.version_tag}."
+
+        # 3. Trả về thông tin version và dữ liệu báo cáo
+        return {
+            "version_tag": latest_version.version_tag,
+            "product_count": latest_version.product_count,
+            "created_at": latest_version.created_at,
+            "report_details": report # Đối tượng này chứa các path file
+        }, None
 
 
 async def trigger_training_service(db: Session, background_tasks: BackgroundTasks):
