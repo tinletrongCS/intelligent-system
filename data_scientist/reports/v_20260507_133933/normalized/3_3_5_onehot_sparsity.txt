@@ -1,0 +1,10 @@
+    Column  Fill Rate (%)
+  sea_Fall      68.197474
+   gen_Men      58.553387
+ gen_Women      37.428243
+sea_Winter      27.439724
+sea_Summer       3.214696
+gen_Unisex       3.214696
+sea_Spring       1.148106
+  gen_Boys       0.459242
+ gen_Girls       0.344432

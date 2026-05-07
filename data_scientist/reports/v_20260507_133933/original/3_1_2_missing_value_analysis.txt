@@ -1,0 +1,20 @@
+                    Total Null  Percentage (%)
+style_note                 833            83.3
+occasion                   699            69.9
+neck                       689            68.9
+fit                        572            57.2
+fabric                     516            51.6
+description                  1             0.1
+id                           0             0.0
+productDisplayName           0             0.0
+brandName                    0             0.0
+price                        0             0.0
+discountedPrice              0             0.0
+subCategory                  0             0.0
+masterCategory               0             0.0
+gender                       0             0.0
+articleType                  0             0.0
+baseColour                   0             0.0
+myntraRating                 0             0.0
+usage                        0             0.0
+season                       0             0.0

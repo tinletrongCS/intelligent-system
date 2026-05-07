@@ -1,0 +1,4 @@
+Skewness gốc (Original): 1.74
+Skewness sau Log (Processed): 0.15
+--------------------------------------------------
+Nhận xét: Thành công giảm độ lệch.
