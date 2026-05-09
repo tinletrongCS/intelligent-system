@@ -1,60 +1,25 @@
-import { BarChart, Bar, LineChart, Line, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
-import { Brain, TrendingUp, Users, Target, Activity } from 'lucide-react';
-
-const customerBehavior = [
-  { hour: '0h', visits: 45, purchases: 12 },
-  { hour: '4h', visits: 23, purchases: 5 },
-  { hour: '8h', visits: 234, purchases: 67 },
-  { hour: '12h', visits: 456, purchases: 123 },
-  { hour: '16h', visits: 389, purchases: 98 },
-  { hour: '20h', visits: 567, purchases: 145 },
-];
-
-const customerSegmentation = [
-  { price: 5000000, quantity: 234, category: 'Budget' },
-  { price: 15000000, quantity: 456, category: 'Mid-range' },
-  { price: 25000000, quantity: 189, category: 'Mid-range' },
-  { price: 35000000, quantity: 123, category: 'Premium' },
-  { price: 45000000, quantity: 67, category: 'Premium' },
-  { price: 55000000, quantity: 34, category: 'Luxury' },
-];
-
-const productPerformance = [
-  { category: 'Chất lượng', A: 85, B: 78, fullMark: 100 },
-  { category: 'Giá cả', A: 72, B: 88, fullMark: 100 },
-  { category: 'Đánh giá', A: 90, B: 82, fullMark: 100 },
-  { category: 'Độ phổ biến', A: 88, B: 75, fullMark: 100 },
-  { category: 'Tồn kho', A: 65, B: 92, fullMark: 100 },
-];
-
-const conversionFunnel = [
-  { stage: 'Truy cập', users: 10000, rate: 100 },
-  { stage: 'Xem sản phẩm', users: 6500, rate: 65 },
-  { stage: 'Thêm giỏ hàng', users: 3200, rate: 32 },
-  { stage: 'Thanh toán', users: 1800, rate: 18 },
-  { stage: 'Hoàn tất', users: 1200, rate: 12 },
-];
-
-const predictions = [
-  { metric: 'Doanh thu dự kiến tháng sau', value: '950M₫', confidence: 87 },
-  { metric: 'Khách hàng mới', value: '~340', confidence: 82 },
-  { metric: 'Tỷ lệ churn', value: '3.2%', confidence: 79 },
-  { metric: 'Giá trị đơn hàng TB', value: '1.8M₫', confidence: 91 },
-];
+import { useState } from 'react';
+import { Brain, Image, Play, Target, TrendingUp } from 'lucide-react';
+import { apiService } from '@/services/api';
+import originalMissingValue from '../../../../data_scientist/reports/v_20260506_193346/original/3_1_2_missing_value_analysis.png';
+import originalCategoryCounts from '../../../../data_scientist/reports/v_20260506_193346/original/3_1_3_category_distribution_counts.png';
+import originalCategoryHeatmap from '../../../../data_scientist/reports/v_20260506_193346/original/3_1_3_category_distribution_heatmap.png';
+import originalAttributeVariance from '../../../../data_scientist/reports/v_20260506_193346/original/3_1_4_attribute_variance.png';
+import originalPriceBoxplot from '../../../../data_scientist/reports/v_20260506_193346/original/3_1_5_price_analysis_boxplot.png';
+import originalPriceDistribution from '../../../../data_scientist/reports/v_20260506_193346/original/3_1_5_price_analysis_dist.png';
+import originalRatingInsights from '../../../../data_scientist/reports/v_20260506_193346/original/3_1_6_rating_insights.png';
+import originalTextLength from '../../../../data_scientist/reports/v_20260506_193346/original/3_1_7_text_semantic_len.png';
+import originalBrandDominance from '../../../../data_scientist/reports/v_20260506_193346/original/3_1_8_brand_dominance.png';
+import normalizedPriceDistribution from '../../../../data_scientist/reports/v_20260506_193346/normalized/3_3_2_price_distribution_comparison.png';
+import normalizedDeduplicationImpact from '../../../../data_scientist/reports/v_20260506_193346/normalized/3_3_3_deduplication_impact.png';
+import normalizedLabelDiversity from '../../../../data_scientist/reports/v_20260506_193346/normalized/3_3_4_label_diversity_plot.png';
+import normalizedOnehotSparsity from '../../../../data_scientist/reports/v_20260506_193346/normalized/3_3_5_onehot_sparsity.png';
+import normalizedTextShrinkage from '../../../../data_scientist/reports/v_20260506_193346/normalized/3_3_6_text_shrinkage.png';
+import normalizedFeatureCorrelation from '../../../../data_scientist/reports/v_20260506_193346/normalized/3_3_7_feature_correlation.png';
+import normalizedPostScalingBoxplot from '../../../../data_scientist/reports/v_20260506_193346/normalized/3_3_9_post_scaling_boxplot.png';
+import normalizedGnnReadiness from '../../../../data_scientist/reports/v_20260506_193346/normalized/3_3_10_gnn_readiness.png';
 
 const insights = [
-  {
-    title: 'Giờ vàng mua sắm',
-    description: 'Khách hàng mua sắm nhiều nhất vào khung giờ 20h-22h với tỷ lệ chuyển đổi cao nhất.',
-    icon: Activity,
-    color: 'text-blue-600',
-  },
-  {
-    title: 'Phân khúc khách hàng',
-    description: 'Phân khúc Mid-range chiếm 45% doanh thu, cần tập trung marketing vào segment này.',
-    icon: Users,
-    color: 'text-purple-600',
-  },
   {
     title: 'Xu hướng sản phẩm',
     description: 'Sản phẩm Apple có tỷ lệ đánh giá cao nhất (4.8/5) và độ trung thành khách hàng tốt.',
@@ -69,16 +34,106 @@ const insights = [
   },
 ];
 
+const originalReportImages = [
+  { title: 'Missing Value Analysis', src: originalMissingValue },
+  { title: 'Category Distribution Counts', src: originalCategoryCounts },
+  { title: 'Category Distribution Heatmap', src: originalCategoryHeatmap },
+  { title: 'Attribute Variance', src: originalAttributeVariance },
+  { title: 'Price Analysis Boxplot', src: originalPriceBoxplot },
+  { title: 'Price Analysis Distribution', src: originalPriceDistribution },
+  { title: 'Rating Insights', src: originalRatingInsights },
+  { title: 'Text Semantic Length', src: originalTextLength },
+  { title: 'Brand Dominance', src: originalBrandDominance },
+];
+
+const normalizedReportImages = [
+  { title: 'Price Distribution Comparison', src: normalizedPriceDistribution },
+  { title: 'Deduplication Impact', src: normalizedDeduplicationImpact },
+  { title: 'Label Diversity', src: normalizedLabelDiversity },
+  { title: 'One-hot Sparsity', src: normalizedOnehotSparsity },
+  { title: 'Text Shrinkage', src: normalizedTextShrinkage },
+  { title: 'Feature Correlation', src: normalizedFeatureCorrelation },
+  { title: 'Post Scaling Boxplot', src: normalizedPostScalingBoxplot },
+  { title: 'GNN Readiness', src: normalizedGnnReadiness },
+];
+
+function ReportImagePanel({ title, images }: { title: string; images: Array<{ title: string; src: string }> }) {
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+
+  return (
+    <div className="rounded-lg bg-white p-5 shadow-sm">
+      <div className="mb-4 flex items-center gap-2">
+        <Image className="h-5 w-5 text-blue-600" />
+        <h2 className="text-lg font-bold">{title}</h2>
+      </div>
+      <div className="space-y-4">
+        {images.map((item) => (
+          <figure key={item.src} className="overflow-hidden rounded-lg border bg-gray-50">
+            <figcaption className="border-b bg-white px-3 py-2 text-sm font-semibold">{item.title}</figcaption>
+            {failedImages[item.src] ? (
+              <div className="flex min-h-40 items-center justify-center p-4 text-center text-sm text-gray-500">
+                Không tải được ảnh: {item.title}
+              </div>
+            ) : (
+              <img
+                src={item.src}
+                alt={item.title}
+                className="block h-auto w-full"
+                loading="lazy"
+                onError={() => setFailedImages((current) => ({ ...current, [item.src]: true }))}
+              />
+            )}
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function DataScientistPage() {
+  const [training, setTraining] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  const triggerTraining = async () => {
+    setTraining(true);
+    setError('');
+    setMessage('');
+    try {
+      const response = await apiService.triggerAITraining();
+      setMessage(response.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Không kích hoạt được training');
+    } finally {
+      setTraining(false);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center gap-3 mb-8">
-        <Brain className="w-8 h-8 text-purple-600" />
-        <h1 className="text-3xl font-bold">Data Science & Analytics</h1>
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Brain className="w-8 h-8 text-purple-600" />
+          <h1 className="text-3xl font-bold">Data Science & Analytics</h1>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={triggerTraining} disabled={training} className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-700 disabled:opacity-60">
+            <Play className="h-4 w-4" />
+            {training ? 'Đang kích hoạt...' : 'Train AI'}
+          </button>
+        </div>
+      </div>
+
+      {message && <div className="mb-4 rounded-lg bg-green-50 p-3 text-green-700">{message}</div>}
+      {error && <div className="mb-4 rounded-lg bg-red-50 p-3 text-red-700">{error}</div>}
+
+      <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <ReportImagePanel title="Original" images={originalReportImages} />
+        <ReportImagePanel title="Normalized" images={normalizedReportImages} />
       </div>
 
       {/* AI Insights */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {insights.map((insight, index) => (
           <div key={index} className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
             <insight.icon className={`w-8 h-8 mb-3 ${insight.color}`} />
@@ -86,98 +141,6 @@ export function DataScientistPage() {
             <p className="text-sm text-gray-600">{insight.description}</p>
           </div>
         ))}
-      </div>
-
-      {/* Predictions */}
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-sm p-6 mb-8">
-        <h2 className="text-2xl font-bold text-white mb-6">Dự đoán bằng AI/ML</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {predictions.map((pred, index) => (
-            <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <p className="text-white/80 text-sm mb-1">{pred.metric}</p>
-              <p className="text-2xl font-bold text-white mb-2">{pred.value}</p>
-              <div className="flex items-center gap-2">
-                <div className="flex-1 bg-white/20 rounded-full h-2">
-                  <div
-                    className="bg-white rounded-full h-2 transition-all"
-                    style={{ width: `${pred.confidence}%` }}
-                  />
-                </div>
-                <span className="text-white/80 text-sm">{pred.confidence}%</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Customer Behavior */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-bold mb-4">Hành vi khách hàng theo giờ</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={customerBehavior}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="hour" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="visits" stroke="#3b82f6" strokeWidth={2} name="Lượt truy cập" />
-              <Line type="monotone" dataKey="purchases" stroke="#10b981" strokeWidth={2} name="Mua hàng" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Conversion Funnel */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-bold mb-4">Phễu chuyển đổi</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={conversionFunnel} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" />
-              <YAxis dataKey="stage" type="category" width={120} />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="users" fill="#8b5cf6" name="Số người dùng" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Customer Segmentation */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-bold mb-4">Phân khúc khách hàng (Giá vs Số lượng)</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <ScatterChart>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="price" name="Giá" unit="₫" />
-              <YAxis dataKey="quantity" name="Số lượng" />
-              <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-              <Legend />
-              <Scatter name="Budget" data={customerSegmentation.filter(d => d.category === 'Budget')} fill="#10b981" />
-              <Scatter name="Mid-range" data={customerSegmentation.filter(d => d.category === 'Mid-range')} fill="#3b82f6" />
-              <Scatter name="Premium" data={customerSegmentation.filter(d => d.category === 'Premium')} fill="#8b5cf6" />
-              <Scatter name="Luxury" data={customerSegmentation.filter(d => d.category === 'Luxury')} fill="#f59e0b" />
-            </ScatterChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Product Performance Radar */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-bold mb-4">So sánh hiệu suất sản phẩm</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <RadarChart data={productPerformance}>
-              <PolarGrid />
-              <PolarAngleAxis dataKey="category" />
-              <PolarRadiusAxis angle={90} domain={[0, 100]} />
-              <Radar name="iPhone 15 Pro" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-              <Radar name="Samsung S24" dataKey="B" stroke="#ec4899" fill="#ec4899" fillOpacity={0.6} />
-              <Legend />
-              <Tooltip />
-            </RadarChart>
-          </ResponsiveContainer>
-        </div>
       </div>
     </div>
   );
